@@ -13,7 +13,7 @@ CHANNEL_ID = 1449119042458878081
 async def on_ready():
     print(f"Logged in as {client.user}")
 
-    channel = client.get_channel(CHANNEL_ID)
+channel = await client.fetch_channel(CHANNEL_ID)
     if channel:
         await channel.send("✅ Bot is online and connected!")
 
