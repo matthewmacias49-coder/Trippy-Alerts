@@ -20,15 +20,12 @@ async def on_ready():
     daily_watchlist.start()
 @tasks.loop(hours=24)
 async def daily_watchlist():
-    channel = client.get_channel(CHANNEL_ID)
+    channel = await client.fetch_channel(CHANNEL_ID)
 
-    if channel:
-        await channel.send("""
-📈 WATCHLIST
+    await channel.send("""
+📋 WATCHLIST
 
 🔥 AMD
 🔥 PLTR
 🔥 HOOD
 """)
-
-client.run(TOKEN)
