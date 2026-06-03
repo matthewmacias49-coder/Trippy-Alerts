@@ -93,8 +93,19 @@ def test_fmp():
 @client.event
 async def on_ready():
     print(f"Logged in as {client.user}")
-print("TEST 123")
+    print("TEST 123")
+
     try:
+        channel = await client.fetch_channel(CHANNEL_ID)
+
+        if channel:
+            await channel.send("✅ Trippy Alerts Online")
+
+    except Exception as e:
+        print(f"Channel error: {e}")
+
+    if not daily_watchlist.is_running():
+        daily_watchlist.start()
         channel = await client.fetch_channel(CHANNEL_ID)
 
         if channel:
