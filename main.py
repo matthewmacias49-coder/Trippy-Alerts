@@ -6,12 +6,12 @@ from datetime import datetime
 import pytz
 
 TOKEN = os.getenv("BOT_TOKEN")
-
+FMP_API_KEY = os.getenv("FMP_API_KEY")
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 
 CHANNEL_ID = 1449119042458878081
-
+EARNINGS_CHANNEL_ID = int(os.getenv("EARNINGS_CHANNEL_ID"))
 WATCHLIST_POOL = [
     "SMH",
     "AMZN",
