@@ -6,12 +6,12 @@ from datetime import datetime
 import pytz
 
 TOKEN = os.getenv("BOT_TOKEN")
-FMP_API_KEY = os.getenv("FMP_API_KEY")
+
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 
 CHANNEL_ID = 1449119042458878081
-EARNINGS_CHANNEL_ID = int(os.getenv("EARNINGS_CHANNEL_ID"))
+
 WATCHLIST_POOL = [
     "SMH",
     "AMZN",
@@ -77,35 +77,12 @@ def get_top_movers():
 
     return movers[:5]
 
-def test_fmp():
-    try:
-        import requests
 
-        url = f"https://financialmodelingprep.com/api/v3/earning_calendar?from=2026-06-01&to=2026-06-07&apikey={FMP_API_KEY}"
-
-        data = requests.get(url, timeout=10).json()
-
-        print("FMP TEST:")
-        print(data[:3])
-
-    except Exception as e:
-        print(f"FMP ERROR: {e}")
 @client.event
 async def on_ready():
     print(f"Logged in as {client.user}")
-    print("TEST 123")
 
     try:
-        channel = await client.fetch_channel(CHANNEL_ID)
-
-        if channel:
-            await channel.send("✅ Trippy Alerts Online")
-
-    except Exception as e:
-        print(f"Channel error: {e}")
-
-    if not daily_watchlist.is_running():
-        daily_watchlist.start()
         channel = await client.fetch_channel(CHANNEL_ID)
 
         if channel:
