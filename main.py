@@ -77,7 +77,19 @@ def get_top_movers():
 
     return movers[:5]
 
-def test_fmp():print(f"Logged in as {client.user}")
+def test_fmp():
+    try:
+        import requests
+
+        url = f"https://financialmodelingprep.com/api/v3/earning_calendar?from=2026-06-01&to=2026-06-07&apikey={FMP_API_KEY}"
+
+        data = requests.get(url, timeout=10).json()
+
+        print("FMP TEST:")
+        print(data[:3])
+
+    except Exception as e:
+        print(f"FMP ERROR: {e}")
     try:
         import requests
 
