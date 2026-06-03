@@ -105,7 +105,7 @@ def test_fmp():
 @client.event
 async def on_ready():
     print(f"Logged in as {client.user}")
-
+print("TEST 123")
     try:
         channel = await client.fetch_channel(CHANNEL_ID)
 
