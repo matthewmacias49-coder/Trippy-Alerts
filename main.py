@@ -48,12 +48,43 @@ WATCHLIST_POOL = [
     "SI=F",
     "INSM",
     "NVDA"
+    "AAPL",
+"AVGO",
+"JPM",
+"BAC",
+"WMT",
+"UBER",
+"CRM",
+"ORCL",
+"QCOM",
+"COST",
 ]
 
 last_post_date = None
 
 
 def get_top_movers():
+    movers = []
+
+    for symbol in WATCHLIST_POOL:
+        try:
+            stock = yf.Ticker(symbol)
+            info = stock.fast_info
+
+            current_price = info.get("lastPrice")
+            prev_close = info.get("previousClose")
+
+            if current_price and prev_close:
+                pct_change = ((current_price - prev_close) / prev_close) * 100
+                movers.append((symbol, pct_change))
+
+        except Exception as e:
+            print(f"Error with {symbol}: {e}")
+            continue
+
+    movers.sort(key=lambda x: abs(x[1]), reverse=True)
+
+    return movers[:10]
     movers = []
 
     for symbol in WATCHLIST_POOL:
@@ -78,7 +109,8 @@ def get_top_movers():
 
 @client.event
 async def on_ready():
-    print(f"Logged in as {client.user}")
+print(f"Logged in as {client.user}")
+print(f"PID: {os.getpid()}")
 
     try:
         channel = await client.fetch_channel(CHANNEL_ID)
@@ -100,7 +132,7 @@ async def daily_watchlist():
     pst = pytz.timezone("America/Los_Angeles")
     now = datetime.now(pst)
 
-    if now.hour == 6 and now.minute == 0:
+  if now.hour == 6:
 
         today = now.date()
 
@@ -124,25 +156,31 @@ async def daily_watchlist():
 
             biggest = movers[0]
 
-            message = f"📈 **TRIPPY MATT WATCHLIST — {today_str}**\n\n"
+message = f"📈 **TRIPPY MATT WATCHLIST — {today_str}**\n\n"
 
-            for symbol, pct in movers:
-                emoji = "🚀" if pct > 0 else "🔻"
-                message += f"{emoji} **{symbol}** ({pct:+.2f}%)\n"
+message += "🔥 **Top Movers**\n"
 
-            message += f"\n🔥 **Biggest Mover:** {biggest[0]} ({biggest[1]:+.2f}%)"
+for symbol, pct in movers:
+    emoji = "🚀" if pct > 0 else "🔻"
+    message += f"{emoji} **{symbol}** ({pct:+.2f}%)\n"
 
-            message += "\n\n🎯 **Why They're On Watch**"
-            message += "\n• Top 5 movers from my personal watchlist"
-            message += "\n• Looking for momentum continuation and breakout setups"
-            message += "\n• Watching for unusual movement and trader attention"
-            message += "\n• Strong movers often create the best day-trade opportunities"
-            message += "\n• These are the stocks most likely to be on my radar today"
+message += f"\n🎯 **Stock Of The Day:** {biggest[0]} ({biggest[1]:+.2f}%)"
 
-            await channel.send(message)
+message += "\n\n📋 **Focus Today**"
+message += "\n• Premarket momentum"
+message += "\n• Gap-up and gap-down setups"
+message += "\n• Volume confirmation"
+message += "\n• Breakout opportunities"
+message += "\n• News-driven price action"
+
+message += "\n\n⚠️ Not financial advice."
+print(f"POSTING WATCHLIST | PID {os.getpid()}")
+await channel.send(message)
 
         except Exception as e:
             print(f"Watchlist error: {e}")
 
-
+@daily_watchlist.before_loop
+async def before_daily_watchlist():
+    await client.wait_until_ready()
 client.run(TOKEN)
