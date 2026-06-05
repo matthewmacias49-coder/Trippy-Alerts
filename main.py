@@ -85,28 +85,6 @@ def get_top_movers():
     movers.sort(key=lambda x: abs(x[1]), reverse=True)
 
     return movers[:10]
-def get_top_movers():
-    movers = []
-
-    for symbol in WATCHLIST_POOL:
-        try:
-            stock = yf.Ticker(symbol)
-            info = stock.fast_info
-
-            current_price = info.get("lastPrice")
-            prev_close = info.get("previousClose")
-
-            if current_price and prev_close:
-                pct_change = ((current_price - prev_close) / prev_close) * 100
-                movers.append((symbol, pct_change))
-
-        except Exception as e:
-            print(f"Error with {symbol}: {e}")
-            continue
-
-    movers.sort(key=lambda x: abs(x[1]), reverse=True)
-
-    return movers[:10]
 
 
 @client.event
