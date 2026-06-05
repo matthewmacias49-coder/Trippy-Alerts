@@ -47,7 +47,7 @@ WATCHLIST_POOL = [
     "WBD",
     "SI=F",
     "INSM",
-    "NVDA"
+    "NVDA",
     "AAPL",
 "AVGO",
 "JPM",
@@ -84,9 +84,11 @@ def get_top_movers():
 
     movers.sort(key=lambda x: abs(x[1]), reverse=True)
 
-    return movers[:10]
-    movers = []
+   movers = []
 
+for symbol in WATCHLIST_POOL:
+...
+return movers[:5]
     for symbol in WATCHLIST_POOL:
         try:
             stock = yf.Ticker(symbol)
@@ -109,8 +111,8 @@ def get_top_movers():
 
 @client.event
 async def on_ready():
-print(f"Logged in as {client.user}")
-print(f"PID: {os.getpid()}")
+    print(f"Logged in as {client.user}")
+    print(f"PID: {os.getpid()}")
 
     try:
         channel = await client.fetch_channel(CHANNEL_ID)
@@ -132,7 +134,7 @@ async def daily_watchlist():
     pst = pytz.timezone("America/Los_Angeles")
     now = datetime.now(pst)
 
-  if now.hour == 6:
+    if now.hour == 6:
 
         today = now.date()
 
@@ -156,27 +158,28 @@ async def daily_watchlist():
 
             biggest = movers[0]
 
-message = f"📈 **TRIPPY MATT WATCHLIST — {today_str}**\n\n"
+            message = f"📈 **TRIPPY MATT WATCHLIST — {today_str}**\n\n"
 
-message += "🔥 **Top Movers**\n"
+            message += "🔥 **Top Movers**\n"
 
-for symbol, pct in movers:
-    emoji = "🚀" if pct > 0 else "🔻"
-    message += f"{emoji} **{symbol}** ({pct:+.2f}%)\n"
+            for symbol, pct in movers:
+                emoji = "🚀" if pct > 0 else "🔻"
+                message += f"{emoji} **{symbol}** ({pct:+.2f}%)\n"
 
-message += f"\n🎯 **Stock Of The Day:** {biggest[0]} ({biggest[1]:+.2f}%)"
+            message += f"\n🎯 **Stock Of The Day:** {biggest[0]} ({biggest[1]:+.2f}%)"
 
-message += "\n\n📋 **Focus Today**"
-message += "\n• Premarket momentum"
-message += "\n• Gap-up and gap-down setups"
-message += "\n• Volume confirmation"
-message += "\n• Breakout opportunities"
-message += "\n• News-driven price action"
+            message += "\n\n📋 **Focus Today**"
+            message += "\n• Premarket momentum"
+            message += "\n• Gap-up and gap-down setups"
+            message += "\n• Volume confirmation"
+            message += "\n• Breakout opportunities"
+            message += "\n• News-driven price action"
 
-message += "\n\n⚠️ Not financial advice."
-print(f"POSTING WATCHLIST | PID {os.getpid()}")
-await channel.send(message)
+            message += "\n\n⚠️ Not financial advice."
 
+            print(f"POSTING WATCHLIST | PID {os.getpid()}")
+
+            await channel.send(message)
         except Exception as e:
             print(f"Watchlist error: {e}")
 
